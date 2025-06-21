@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Edit Blog</title>
+    <style>
+        /* CSS cơ bản cho form */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0; padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        form div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #444;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 15px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            text-decoration: none;
+            font-weight: 600;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Edit Blog</h1>
+
+    <form th:action="@{/blogs/update}" th:object="${blog}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" th:field="*{title}" required />
+        </div>
+
+        <div>
+            <label for="author">Author:</label>
+            <input type="text" id="author" th:field="*{author}" required />
+        </div>
+
+        <div>
+            <label for="content">Content:</label>
+            <textarea id="content" th:field="*{content}" rows="10" required></textarea>
+        </div>
+
+        <div>
+            <button type="submit">Update</button>
+            <a href="/blogs">Cancel</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

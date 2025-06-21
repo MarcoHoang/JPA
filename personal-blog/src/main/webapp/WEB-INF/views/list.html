@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Blog List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0; padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        p a {
+            font-size: 1.1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            color: #444;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: 700;
+        }
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        td a {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>All Blogs</h1>
+
+    <p>
+        <a href="/blogs/create">➕ Create New Blog</a>
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="blog : ${blogs}">
+            <td th:text="${blog.title}">Blog Title</td>
+            <td th:text="${blog.author}">Author</td>
+            <td th:text="${blog.createdAt != null} ? ${blog.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))} : ''">01/01/2023 10:00</td>
+            <td>
+                <a th:href="@{'/blogs/view/' + ${blog.id}}">👁 View</a> |
+                <a th:href="@{'/blogs/edit/' + ${blog.id}}">✏ Edit</a> |
+                <a th:href="@{'/blogs/delete/' + ${blog.id}}"
+                   onclick="return confirm('Are you sure you want to delete this blog?');">🗑 Delete</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(blogs)}">
+            <td colspan="4" style="text-align:center; font-style: italic;">No blogs found.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
