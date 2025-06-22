@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách danh mục</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<h2>Danh sách danh mục</h2>
+
+<a th:href="@{/categories/create}">+ Thêm danh mục mới</a>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Tên danh mục</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category, loop : ${categories}">
+        <td th:text="${loop.index + 1}"></td>
+        <td th:text="${category.name}"></td>
+        <td>
+            <a th:href="@{/categories/edit/{id}(id=${category.id})}">Sửa</a> |
+            <a th:href="@{/categories/delete/{id}(id=${category.id})}"
+               onclick="return confirm('Bạn có chắc muốn xoá danh mục này?')">Xoá</a>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(categories)}">
+        <td colspan="3">Không có danh mục nào.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

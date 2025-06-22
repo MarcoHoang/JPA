@@ -11,24 +11,13 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "blogs")
-public class Blog {
+@Table(name = "categorys")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    @Column(length = 10000)
-    private String content;
-
-    private String author;
+    private String name;
 
     private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
 }
-
