@@ -37,6 +37,11 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Iterable<Blog> findAll() {
+        return blogRepository.findAll();
+    }
+
+    @Override
     public Page<Blog> findByTitleContainingIgnoreCase(String title, Pageable pageable) {
         return blogRepository.findByTitleContainingIgnoreCase(title, pageable);
     }

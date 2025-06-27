@@ -9,6 +9,8 @@ import java.util.Optional; // Import Optional
 
 public interface BlogService {
 
+    Iterable<Blog> findAll();
+
     Page<Blog> findAll(Pageable pageable);
 
     Optional<Blog> findById(Long id);

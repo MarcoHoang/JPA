@@ -1,5 +1,6 @@
 package com.codegym.personalblog.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Category {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER) // Có thể thêm EAGER fetch để đảm bảo blogs được tải cùng category
+    @JsonManagedReference
     private List<Blog> blogs;
 }
