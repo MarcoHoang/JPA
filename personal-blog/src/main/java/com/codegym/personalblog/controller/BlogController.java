@@ -61,10 +61,9 @@ public class BlogController {
         return "blogs/create";
     }
 
-    // Dùng chung cho cả create và update
     @PostMapping("/save")
     public String saveBlog(@ModelAttribute Blog blog) {
-        blogService.save(blog); // Logic createdAt đã được tự động hóa
+        blogService.save(blog);
         return "redirect:/blogs";
     }
 
@@ -87,7 +86,7 @@ public class BlogController {
             model.addAttribute("blog", blogOptional.get());
             return "blogs/edit";
         }
-        return "error/404"; // Trả về trang lỗi nếu không tìm thấy
+        return "error/404";
     }
 
     @GetMapping("/delete/{id}")
@@ -95,7 +94,7 @@ public class BlogController {
         Optional<Blog> blogOptional = blogService.findById(id);
         if (blogOptional.isPresent()) {
             model.addAttribute("blog", blogOptional.get());
-            return "blogs/delete"; // Có thể tạo một trang xác nhận xóa
+            return "blogs/delete";
         }
         return "error/404";
     }

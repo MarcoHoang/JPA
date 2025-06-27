@@ -84,10 +84,8 @@
     <div class="meta-info">
         <p><strong>Author:</strong> <span th:text="${blog.author}">Author Name</span></p>
 
-        <!-- ===== PHẦN THÊM MỚI: HIỂN THỊ CATEGORY ===== -->
         <p>
             <strong>Category:</strong>
-            <!-- Link tới trang danh sách các bài viết của category này -->
             <a th:if="${blog.category != null}"
                th:href="@{/blogs(categoryId=${blog.category.id})}"
                th:text="${blog.category.name}">
@@ -95,28 +93,23 @@
             </a>
             <span th:if="${blog.category == null}">N/A</span>
         </p>
-        <!-- ============================================= -->
 
         <p><strong>Created at:</strong>
-            <!-- Sử dụng cú pháp #temporals tiện lợi của Thymeleaf -->
             <span th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2023 10:00</span>
         </p>
     </div>
 
-    <!-- Sử dụng th:text để an toàn hơn, th:utext nếu bạn tin tưởng nội dung -->
     <div class="content" th:text="${blog.content}">
         Blog content goes here...
     </div>
 
     <div class="actions">
         <a th:href="@{'/blogs/edit/' + ${blog.id}}">✏ Edit</a>
-        <!-- Link tới trang xác nhận xóa -->
         <a th:href="@{'/blogs/delete/' + ${blog.id}}">🗑 Delete</a>
         <a href="/blogs">← Back to list</a>
     </div>
 </div>
 
-<!-- Thông báo nếu không tìm thấy blog -->
 <div class="container" th:if="${blog == null}">
     <h1>Blog Not Found</h1>
     <p>The blog you are looking for does not exist.</p>

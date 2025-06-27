@@ -88,10 +88,7 @@
             <td th:text="${category.id}">1</td>
             <td th:text="${category.name}">Technology</td>
 
-            <!-- ======================================================= -->
-            <!-- ===== SỬA LỖI HIỂN THỊ NGÀY GIỜ TẠI ĐÂY ===== -->
             <td th:text="${category.createdAt != null} ? ${category.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))} : ''">01/01/2023</td>
-            <!-- ======================================================= -->
 
             <td class="actions">
                 <a th:href="@{'/categories/edit/' + ${category.id}}">✏️ Edit</a>

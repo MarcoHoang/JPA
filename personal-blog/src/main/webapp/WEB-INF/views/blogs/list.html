@@ -168,14 +168,11 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Dùng logic phân trang nhưng cú pháp hiển thị là của bạn -->
         <tr th:each="blog : ${blogs.content}">
             <td th:text="${blog.title}">Blog Title</td>
             <td th:text="${blog.author}">Author</td>
             <td th:text="${blog.category?.name} ?: 'N/A'">Category Name</td>
 
-            <!-- ======================================================= -->
-            <!-- ===== SỬ DỤNG LẠI CHÍNH XÁC CÚ PHÁP CŨ CỦA BẠN ===== -->
             <td th:text="${blog.createdAt != null} ? ${blog.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))} : ''">
                 01/01/2023 10:00
             </td>
@@ -184,7 +181,6 @@
                 <a th:href="@{'/blogs/edit/' + ${blog.id}}">✏ Edit</a> |
                 <a th:href="@{'/blogs/delete/' + ${blog.id}}">🗑 Delete</a>
             </td>
-            <!-- ======================================================= -->
 
         </tr>
         <tr th:if="${blogs.content.isEmpty()}">

@@ -28,7 +28,6 @@ public class CategoryController {
         return "category/create";
     }
 
-    // Dùng chung cho cả create và update
     @PostMapping("/save")
     public String saveCategory(@ModelAttribute Category category) {
         categoryService.save(category);
