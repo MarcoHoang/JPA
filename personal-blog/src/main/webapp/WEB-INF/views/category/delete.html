@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Confirm Deletion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 20px;
+        }
+
+        .confirm-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-top: 5px solid #dc3545;
+        }
+
+        h1 {
+            color: #dc3545;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .alert {
+            color: #856404;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .form-actions {
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #c82333;
+        }
+
+        a {
+            margin-left: 15px;
+            text-decoration: none;
+            color: #555;
+            background-color: #f0f0f0;
+            padding: 11px 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="confirm-container" th:if="${category != null}">
+    <h1>Confirm Deletion</h1>
+    <p>Are you sure you want to delete the category: <strong th:text="${category.name}">Category Name</strong>?</p>
+
+    <div class="alert">
+        <strong>Warning:</strong> Deleting this category might affect blogs that belong to it. This action cannot be
+        undone.
+    </div>
+
+    <form th:action="@{/categories/delete}" method="post" class="form-actions">
+        <input type="hidden" name="id" th:value="${category.id}"/>
+        <button type="submit">Yes, Delete It</button>
+        <a href="/categories">No, Cancel</a>
+    </form>
+</div>
+<div class="confirm-container" th:if="${category == null}">
+    <h1>Category Not Found</h1>
+    <p>The category you are trying to delete does not exist.</p>
+    <a href="/categories">Back to List</a>
+</div>
+</body>
+</html>

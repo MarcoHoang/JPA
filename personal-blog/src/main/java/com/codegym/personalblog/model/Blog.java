@@ -1,14 +1,17 @@
 package com.codegym.personalblog.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "blogs")
@@ -19,16 +22,16 @@ public class Blog {
 
     private String title;
 
-    @Column(length = 10000)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String author;
 
+    @Column(updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
 }
-

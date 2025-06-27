@@ -1,17 +1,21 @@
 package com.codegym.personalblog.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categorys")
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,5 +23,10 @@ public class Category {
 
     private String name;
 
+    @Column(updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "category")
+    private List<Blog> blogs;
 }

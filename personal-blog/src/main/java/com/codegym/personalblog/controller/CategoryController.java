@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/categories")
@@ -18,44 +17,46 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ModelAndView list() {
-        return new ModelAndView("category/list", "categories", categoryService.findAll());
+    public String listCategories(Model model) {
+        model.addAttribute("categories", categoryService.findAll());
+        return "category/list";
     }
 
     @GetMapping("/create")
-    public ModelAndView createForm() {
-        return new ModelAndView("category/create", "category", new Category());
+    public String showCreateForm(Model model) {
+        model.addAttribute("category", new Category());
+        return "category/create";
     }
 
+    // Dùng chung cho cả create và update
     @PostMapping("/save")
-    public String save(@ModelAttribute Category category) {
-        if (category.getCreatedAt() == null) {
-            category.setCreatedAt(LocalDateTime.now());
-        }
+    public String saveCategory(@ModelAttribute Category category) {
         categoryService.save(category);
         return "redirect:/categories";
     }
 
     @GetMapping("/edit/{id}")
-    public String editCategory(@PathVariable Long id, Model model) {
-        model.addAttribute("category", categoryService.findById(id));
-        return "category/edit";
-    }
-
-    @PostMapping("/update")
-    public String updateCategory(@ModelAttribute Category category) {
-        Category existingCategory = categoryService.findById(category.getId());
-        if (existingCategory != null) {
-            category.setCreatedAt(existingCategory.getCreatedAt());
-        } else {
-            category.setCreatedAt(LocalDateTime.now());
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Optional<Category> categoryOptional = categoryService.findById(id);
+        if (categoryOptional.isPresent()) {
+            model.addAttribute("category", categoryOptional.get());
+            return "category/edit";
         }
-        categoryService.save(category);
-        return "redirect:/categories";
+        return "error/404";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCategory(@PathVariable Long id) {
+    public String showDeleteForm(@PathVariable Long id, Model model) {
+        Optional<Category> categoryOptional = categoryService.findById(id);
+        if (categoryOptional.isPresent()) {
+            model.addAttribute("category", categoryOptional.get());
+            return "category/delete";
+        }
+        return "error/404";
+    }
+
+    @PostMapping("/delete")
+    public String deleteCategory(@RequestParam("id") Long id) {
         categoryService.deleteById(id);
         return "redirect:/categories";
     }

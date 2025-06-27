@@ -1,50 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title th:text="${blog.title}">Blog Detail</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #f7f7f7;
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
         }
+
         .container {
             max-width: 800px;
             margin: 40px auto;
             background: #fff;
             padding: 25px 30px;
             border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             color: #333;
         }
-        h1 {
-            text-align: center;
+
+        .meta-info {
             margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 10px;
             color: #222;
         }
+
         p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             line-height: 1.5;
             margin: 8px 0;
         }
-        strong {
-            color: #555;
+
+        .meta-info p {
+            color: #666;
+            font-size: 0.9rem;
         }
+
+        strong {
+            color: #333;
+        }
+
         .content {
             margin-top: 20px;
-            padding: 15px;
-            background: #fafafa;
-            border-left: 4px solid #007bff;
-            white-space: pre-wrap;
-            font-size: 1rem;
+            white-space: pre-wrap; /* Giữ lại định dạng xuống dòng */
+            font-size: 1.1rem;
+            line-height: 1.6;
             color: #444;
         }
-        hr {
-            margin: 30px 0;
-            border: none;
-            border-top: 1px solid #ddd;
+
+        .actions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
         }
+
         a {
             color: #007bff;
             text-decoration: none;
@@ -52,6 +69,7 @@
             margin-right: 15px;
             transition: color 0.3s ease;
         }
+
         a:hover {
             color: #0056b3;
             text-decoration: underline;
@@ -60,28 +78,49 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" th:if="${blog != null}">
     <h1 th:text="${blog.title}">Blog Title</h1>
 
-    <p><strong>Author:</strong> <span th:text="${blog.author}">Author Name</span></p>
+    <div class="meta-info">
+        <p><strong>Author:</strong> <span th:text="${blog.author}">Author Name</span></p>
 
-    <p><strong>Created at:</strong>
-        <span th:text="${blog.createdAt != null} ? ${blog.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))} : ''">01/01/2023 10:00</span>
-    </p>
+        <!-- ===== PHẦN THÊM MỚI: HIỂN THỊ CATEGORY ===== -->
+        <p>
+            <strong>Category:</strong>
+            <!-- Link tới trang danh sách các bài viết của category này -->
+            <a th:if="${blog.category != null}"
+               th:href="@{/blogs(categoryId=${blog.category.id})}"
+               th:text="${blog.category.name}">
+                Category Name
+            </a>
+            <span th:if="${blog.category == null}">N/A</span>
+        </p>
+        <!-- ============================================= -->
 
-    <hr />
+        <p><strong>Created at:</strong>
+            <!-- Sử dụng cú pháp #temporals tiện lợi của Thymeleaf -->
+            <span th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2023 10:00</span>
+        </p>
+    </div>
 
-    <div class="content" th:utext="${blog.content}">
+    <!-- Sử dụng th:text để an toàn hơn, th:utext nếu bạn tin tưởng nội dung -->
+    <div class="content" th:text="${blog.content}">
         Blog content goes here...
     </div>
 
-    <hr />
-    <p>
-        <a th:href="@{'/blogs/edit/' + ${blog.id}}">✏ Edit</a> |
-        <a th:href="@{'/blogs/delete/' + ${blog.id}}"
-           onclick="return confirm('Are you sure you want to delete this blog?');">🗑 Delete</a> |
+    <div class="actions">
+        <a th:href="@{'/blogs/edit/' + ${blog.id}}">✏ Edit</a>
+        <!-- Link tới trang xác nhận xóa -->
+        <a th:href="@{'/blogs/delete/' + ${blog.id}}">🗑 Delete</a>
         <a href="/blogs">← Back to list</a>
-    </p>
+    </div>
+</div>
+
+<!-- Thông báo nếu không tìm thấy blog -->
+<div class="container" th:if="${blog == null}">
+    <h1>Blog Not Found</h1>
+    <p>The blog you are looking for does not exist.</p>
+    <a href="/blogs">← Back to list</a>
 </div>
 
 </body>

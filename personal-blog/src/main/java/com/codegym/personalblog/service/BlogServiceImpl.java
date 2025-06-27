@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Optional; // Import Optional
 
 @Service
 public class BlogServiceImpl implements BlogService {
@@ -16,42 +16,33 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private BlogRepository blogRepository;
 
-    // Phân trang
     @Override
     public Page<Blog> findAll(Pageable pageable) {
         return blogRepository.findAll(pageable);
     }
 
-    // Tìm theo id
     @Override
-    public Blog findById(Long id) {
-        return blogRepository.findById(id).orElse(null);
+    public Optional<Blog> findById(Long id) {
+        return blogRepository.findById(id);
     }
 
-    // Lưu hoặc cập nhật
     @Override
     public void save(Blog blog) {
-        if (blog.getCreatedAt() == null) {
-            blog.setCreatedAt(LocalDateTime.now());
-        }
         blogRepository.save(blog);
     }
 
-    // Xoá
     @Override
     public void deleteById(Long id) {
         blogRepository.deleteById(id);
     }
 
-    // Tìm kiếm theo tiêu đề
     @Override
-    public Page<Blog> findByTitleContaining(String keyword, Pageable pageable) {
-        return blogRepository.findByTitleContaining(keyword, pageable);
+    public Page<Blog> findByTitleContainingIgnoreCase(String title, Pageable pageable) {
+        return blogRepository.findByTitleContainingIgnoreCase(title, pageable);
     }
 
-    // Tìm theo danh mục
     @Override
-    public Page<Blog> findByCategory(Category category, Pageable pageable) {
-        return blogRepository.findByCategory(category, pageable);
+    public Page<Blog> findAllByCategory(Category category, Pageable pageable) {
+        return blogRepository.findAllByCategory(category, pageable);
     }
 }

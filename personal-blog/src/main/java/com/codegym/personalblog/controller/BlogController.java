@@ -12,8 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/blogs")
@@ -25,93 +24,85 @@ public class BlogController {
     @Autowired
     private CategoryService categoryService;
 
-    // Đặt danh sách category vào mọi view
     @ModelAttribute("categories")
-    public List<Category> categories() {
+    public Iterable<Category> categories() {
         return categoryService.findAll();
     }
 
-    // Danh sách blogs có phân trang và sắp xếp
     @GetMapping
     public String listBlogs(Model model,
-                            @PageableDefault(size = 5, sort = "createdAt", direction = org.springframework.data.domain.Sort.Direction.DESC)
-                            Pageable pageable) {
-        Page<Blog> blogs = blogService.findAll(pageable);
+                            @RequestParam(name = "keyword", required = false) String keyword,
+                            @RequestParam(name = "categoryId", required = false) Long categoryId,
+                            @PageableDefault(size = 5, sort = "createdAt", direction = org.springframework.data.domain.Sort.Direction.DESC) Pageable pageable) {
+
+        Page<Blog> blogs;
+        if (keyword != null && !keyword.isEmpty()) {
+            blogs = blogService.findByTitleContainingIgnoreCase(keyword, pageable);
+            model.addAttribute("keyword", keyword);
+        } else if (categoryId != null) {
+            Optional<Category> categoryOptional = categoryService.findById(categoryId);
+            if (categoryOptional.isPresent()) {
+                blogs = blogService.findAllByCategory(categoryOptional.get(), pageable);
+                model.addAttribute("selectedCategory", categoryOptional.get());
+            } else {
+                blogs = Page.empty(pageable);
+            }
+        } else {
+            blogs = blogService.findAll(pageable);
+        }
+
         model.addAttribute("blogs", blogs);
         return "blogs/list";
     }
 
-    // Form tạo mới
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("blog", new Blog());
         return "blogs/create";
     }
 
-    // Lưu blog mới
+    // Dùng chung cho cả create và update
     @PostMapping("/save")
     public String saveBlog(@ModelAttribute Blog blog) {
-        if (blog.getCreatedAt() == null) {
-            blog.setCreatedAt(LocalDateTime.now());
-        }
-        blogService.save(blog);
+        blogService.save(blog); // Logic createdAt đã được tự động hóa
         return "redirect:/blogs";
     }
 
-    // Xem chi tiết
     @GetMapping("/view/{id}")
     public String viewBlog(@PathVariable Long id, Model model) {
-        model.addAttribute("blog", blogService.findById(id));
-        return "blogs/view";
-    }
-
-    // Form cập nhật
-    @GetMapping("/edit/{id}")
-    public String editBlog(@PathVariable Long id, Model model) {
-        model.addAttribute("blog", blogService.findById(id));
-        return "blogs/edit";
-    }
-
-    // Cập nhật bài viết
-    @PostMapping("/update")
-    public String updateBlog(@ModelAttribute Blog blog) {
-        Blog existingBlog = blogService.findById(blog.getId());
-        if (existingBlog != null) {
-            blog.setCreatedAt(existingBlog.getCreatedAt());
-        } else {
-            blog.setCreatedAt(LocalDateTime.now());
+        Optional<Blog> blogOptional = blogService.findById(id);
+        if (blogOptional.isPresent()) {
+            model.addAttribute("blog", blogOptional.get());
+            return "blogs/view";
         }
-        blogService.save(blog);
-        return "redirect:/blogs";
+        return "error/404";
     }
 
-    // Xoá bài viết
+
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Optional<Blog> blogOptional = blogService.findById(id);
+        if (blogOptional.isPresent()) {
+            model.addAttribute("blog", blogOptional.get());
+            return "blogs/edit";
+        }
+        return "error/404"; // Trả về trang lỗi nếu không tìm thấy
+    }
+
     @GetMapping("/delete/{id}")
-    public String deleteBlog(@PathVariable Long id) {
+    public String showDeleteForm(@PathVariable Long id, Model model) {
+        Optional<Blog> blogOptional = blogService.findById(id);
+        if (blogOptional.isPresent()) {
+            model.addAttribute("blog", blogOptional.get());
+            return "blogs/delete"; // Có thể tạo một trang xác nhận xóa
+        }
+        return "error/404";
+    }
+
+    @PostMapping("/delete")
+    public String deleteBlog(@RequestParam Long id) {
         blogService.deleteById(id);
         return "redirect:/blogs";
-    }
-
-    // Tìm kiếm theo tiêu đề
-    @GetMapping("/search")
-    public String search(@RequestParam("keyword") String keyword, Model model,
-                         @PageableDefault(size = 5, sort = "createdAt", direction = org.springframework.data.domain.Sort.Direction.DESC)
-                         Pageable pageable) {
-        Page<Blog> blogs = blogService.findByTitleContaining(keyword, pageable);
-        model.addAttribute("blogs", blogs);
-        model.addAttribute("keyword", keyword);
-        return "blogs/list";
-    }
-
-    // Hiển thị theo danh mục
-    @GetMapping("/category/{id}")
-    public String blogsByCategory(@PathVariable Long id, Model model,
-                                  @PageableDefault(size = 5, sort = "createdAt", direction = org.springframework.data.domain.Sort.Direction.DESC)
-                                  Pageable pageable) {
-        Category category = categoryService.findById(id);
-        Page<Blog> blogs = blogService.findByCategory(category, pageable);
-        model.addAttribute("blogs", blogs);
-        model.addAttribute("selectedCategory", category.getName());
-        return "blogs/list";
     }
 }
