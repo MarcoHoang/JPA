@@ -1,0 +1,13 @@
+<tr th:each="blog : ${blogs}">
+    <td th:text="${blog.title}">Spring Boot REST</td>
+    <td th:text="${blog.author}">Marco</td>
+    <td th:text="${blog.category?.name} ?: 'N/A'">Java</td>
+    <td th:text="${blog.createdAt != null} ? ${blog.createdAt.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))} : ''">
+        30/06/2025 10:00
+    </td>
+    <td>
+        <a th:href="@{'/blogs/view/' + ${blog.id}}">👁 View</a> |
+        <a th:href="@{'/blogs/edit/' + ${blog.id}}">✏ Edit</a> |
+        <a th:href="@{'/blogs/delete/' + ${blog.id}}">🗑 Delete</a>
+    </td>
+</tr>

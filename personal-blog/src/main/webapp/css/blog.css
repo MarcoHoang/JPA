@@ -1,0 +1,70 @@
+/* Phần danh sách blog */
+.blog-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background-color: #fafafa;
+    transition: box-shadow 0.3s ease;
+}
+
+.blog-item:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề blog */
+.blog-item h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Thông tin mô tả */
+.blog-item p {
+    margin-top: 8px;
+    color: #666;
+}
+
+/* Form tìm kiếm */
+#searchForm {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#searchForm input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+}
+
+#searchForm button {
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+#searchForm button:hover {
+    background-color: #1565c0;
+}
+
+/* Nút tải thêm */
+#loadMoreBtn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #388e3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#loadMoreBtn:hover {
+    background-color: #2e7d32;
+}

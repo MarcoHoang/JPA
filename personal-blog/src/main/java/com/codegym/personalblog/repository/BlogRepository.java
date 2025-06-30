@@ -13,4 +13,7 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     Page<Blog> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
     Page<Blog> findAllByCategory(Category category, Pageable pageable);
+
+    Page<Blog> findByTitleContainingIgnoreCaseAndCategory(String title, Category category, Pageable pageable);
+
 }
