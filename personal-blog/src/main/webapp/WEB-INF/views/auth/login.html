@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập - TomoTalk Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+        }
+
+        .login-container {
+            width: 360px;
+            margin: 100px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2e89ff;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .error, .logout, .register-success {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .register-success {
+            color: green;
+        }
+
+        .extra {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .extra a {
+            text-decoration: none;
+            color: #2e89ff;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Đăng nhập</h2>
+
+    <!-- Form login -->
+    <form th:action="@{/login}" method="post">
+        <input type="text" name="username" placeholder="Tên đăng nhập" required>
+        <input type="password" name="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng nhập</button>
+    </form>
+
+    <!-- Thông báo -->
+    <div class="error" th:if="${param.error}">
+        Sai tên đăng nhập hoặc mật khẩu.
+    </div>
+    <div class="logout" th:if="${param.logout}">
+        Bạn đã đăng xuất thành công.
+    </div>
+    <div class="register-success" th:if="${param.registerSuccess}">
+        Đăng ký thành công. Mời bạn đăng nhập.
+    </div>
+
+    <div class="extra">
+        Chưa có tài khoản? <a th:href="@{/register}">Đăng ký</a>
+    </div>
+</div>
+</body>
+</html>

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,52 +43,65 @@ public class BlogController {
         return "blogs/list";
     }
 
-    // Form tạo mới
+    // Form tạo mới - chỉ cho phép người đăng nhập
     @GetMapping("/create")
+    @PreAuthorize("isAuthenticated()")
     public String showCreateForm(Model model) {
         model.addAttribute("blog", new Blog());
         return "blogs/create";
     }
 
-    // Lưu blog mới
+    // Lưu blog mới - chỉ cho phép người đăng nhập
     @PostMapping("/save")
-    public String saveBlog(@ModelAttribute Blog blog) {
+    @PreAuthorize("isAuthenticated()")
+    public String saveBlog(@ModelAttribute Blog blog, Authentication authentication) {
         if (blog.getCreatedAt() == null) {
             blog.setCreatedAt(LocalDateTime.now());
         }
+
+        // Gán người dùng hiện tại làm tác giả
+        blog.setAuthor(authentication.getName());
+
         blogService.save(blog);
         return "redirect:/blogs";
     }
 
-    // Xem chi tiết
+    // Xem chi tiết bài viết
     @GetMapping("/view/{id}")
     public String viewBlog(@PathVariable Long id, Model model) {
         model.addAttribute("blog", blogService.findById(id));
         return "blogs/view";
     }
 
-    // Form cập nhật
+    // Form cập nhật - chỉ người đăng nhập
     @GetMapping("/edit/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String editBlog(@PathVariable Long id, Model model) {
         model.addAttribute("blog", blogService.findById(id));
         return "blogs/edit";
     }
 
-    // Cập nhật bài viết
+    // Cập nhật bài viết - chỉ người đăng nhập
     @PostMapping("/update")
-    public String updateBlog(@ModelAttribute Blog blog) {
+    @PreAuthorize("isAuthenticated()")
+    public String updateBlog(@ModelAttribute Blog blog, Authentication authentication) {
         Blog existingBlog = blogService.findById(blog.getId());
         if (existingBlog != null) {
             blog.setCreatedAt(existingBlog.getCreatedAt());
         } else {
             blog.setCreatedAt(LocalDateTime.now());
         }
+
+        // Cập nhật tác giả thành người hiện tại (nếu muốn giữ nguyên người cũ thì bỏ dòng dưới)
+        blog.setAuthor(authentication.getName());
+
         blogService.save(blog);
         return "redirect:/blogs";
     }
 
-    // Xoá bài viết
+    // Xoá bài viết - chỉ người đăng nhập
     @GetMapping("/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String deleteBlog(@PathVariable Long id) {
         blogService.deleteById(id);
         return "redirect:/blogs";

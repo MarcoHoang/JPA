@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký tài khoản - TomoTalk Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+        }
+
+        .register-container {
+            width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .extra {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .extra a {
+            text-decoration: none;
+            color: #2e89ff;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <h2>Đăng ký tài khoản</h2>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <input type="text" th:field="*{username}" placeholder="Tên đăng nhập" required>
+        <input type="password" th:field="*{password}" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng ký</button>
+    </form>
+
+    <div class="error" th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div class="extra">
+        Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a>
+    </div>
+</div>
+</body>
+</html>

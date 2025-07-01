@@ -18,6 +18,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect; // Thêm dòng này
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -58,6 +60,8 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
+        templateEngine.setEnableSpringELCompiler(true);
+        templateEngine.addDialect(new SpringSecurityDialect()); // Thêm dòng này
         return templateEngine;
     }
 
@@ -92,7 +96,7 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/blogdb");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/blog_db_secutiry");
         dataSource.setUsername("root");
         dataSource.setPassword("123456");
         return dataSource;
@@ -112,4 +116,3 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         return properties;
     }
 }
-
